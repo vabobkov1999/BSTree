@@ -405,3 +405,4 @@ auto change_color(int c) -> void {
 #endif
   }
 }
+ 
