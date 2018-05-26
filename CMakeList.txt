@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(BUILD_TESTS "Build tests" OFF)
 option(BUILD_EXAMPLES "Build Examples" OFF)
 
-set(${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources/tree.cpp")
+set(${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sources/bstree.cpp")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)
 
@@ -29,7 +29,7 @@ if(BUILD_TESTS)
   add_executable(tests ${${PROJECT_NAME}_TEST_SOURCES})
   target_link_libraries(tests ${PROJECT_NAME} Catch::Catch )
 
-  add_test(NAME test_name COMMAND tests "-s" "-r" "compact" "--use-colour" "yes")
+  add_test(NAME test_name COMMAND tests "-s" "-r" "compact" "--use-colour" "yes") 
 endif()
 
 if(BUILD_EXAMPLES)
