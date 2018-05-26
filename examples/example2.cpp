@@ -1,127 +1,139 @@
-#include <windows.h>
 #include <iostream>
 #include <string>
-#include <limits> // ввод значений через int
-#include "tree.h"
-using namespace std;
+#include "bstree.hpp"
 using namespace BSTree;
+using namespace std;
 
-void menu();
-void correct_input(int &choose);
+auto menu(Tree&) -> void;
 
-int main(int argc, char* argv[])
-{
-#ifdef WIN32
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
-#endif
-	Tree tree;
-	if (argc > 1) {
-		int i = 0;
-		while (argc - 1 != i) {
-			i++;
-			tree.insert(atoi(argv[i]));
-		}
-	}
-	bool exit = false;
-	while (!exit)
-	{
-		menu();
-		int choose;
-		correct_input(choose);
-		switch (choose)
-		{
-		case 1:
-			tree.print();
-			break;
-		case 2:
-		{
-			if (tree.get_root() == nullptr) {
-				cout << "Дерево пусто" << endl;
-				break;
-			}
-			bool is_correct = false;
-			while (!is_correct) {
-				is_correct = true;
-				cout << "a. Прямой обход" << endl;
-				cout << "b. Поперечный обход" << endl;
-				cout << "c. Обратный обход " << endl;
-				char temp = 0;
-				cin >> temp;
-				is_correct = tree.print((traversal_order)temp);
-			}
-		}
-		break;
-    
-		case 3:
-			break;
-      
-		case 4:
-			break;
-      
-		case 5:
-			break;
-      
-		case 6:
-			break;
-      
-		case 7:
-			break;
-      
-		case 8:
-		{
-			bool is_correct = false;
-			while (!is_correct)
-			{
-				cout << "Вы хотите покинуть  программу ? (y,N)" << endl;
-				string answer;
-				cin >> answer;
-				if (answer == "y" || answer == "Y" || answer == "yes" || answer == "Yes" || answer == "YES")
-				{
-					cout << "До свидания, всего хорошего!" << endl;
-					is_correct = true;
-					exit = true;
-					break;
-				}
-				if (answer == "N" || answer == "n" || answer == "no" || answer == "No" || answer == "NO")
-				{
-					is_correct = true;
-					break;
-				}
-				cout << "Попробуйте еще раз!" << endl;
-			}
-			break;
-		}
-		default:
-			cout << "Неправильный ввод данных!" << endl;
-			break;
-		}
-	}
-	return 0;
+auto change_color(int c) -> void;
+
+int main(int argc, char* argv[]) {
+    Tree tree;
+    int n = 0;
+
+    for (unsigned int i = 1; i < argc; ++i) ++n;
+
+    int* MassTree_curr = new int[n];
+
+    for (unsigned i = 0; i < n; ++i) MassTree_curr[i] = atoi(argv[i + 1]);
+
+    int* MassTree = new int[n];
+
+    for (unsigned i = 0; i < n; ++i)
+        for (unsigned j = i + 1; j < n; ++j) {
+            if (MassTree_curr[i] == MassTree_curr[j]) MassTree_curr[j] = 0;
+        }
+    int k = 0;
+    bool flag = true;
+    for (unsigned i = 0; i < n; ++i) {
+        if ((MassTree_curr[i] == 0) && (flag == true)) {
+            string str = argv[i + 1];
+            if (str == "0") {
+                MassTree[k] = MassTree_curr[i];
+                ++k;
+                flag = false;
+                continue;
+            }
+        }
+        if (MassTree_curr[i] != 0) {
+            MassTree[k] = MassTree_curr[i];
+            ++k;
+        }
+    }
+
+    for (unsigned i = 0; i < k; ++i) tree.insert(MassTree[i]);
+    delete[] MassTree_curr;
+    menu(tree);
+    delete[] MassTree;
 }
 
-void menu()
-{
-	cout << endl;
-	cout << "Выберите одну из операций:" << endl;
-	cout << "1. Вывести дерево на экран" << endl;
-	cout << "2. Вывести список узлов дерева" << endl;
-	cout << "3. Добавить узел в дерево" << endl;
-	cout << "4. Удалить узел из дерева" << endl;
-	cout << "5. Сохранить дерево в файл" << endl;
-	cout << "6. Загрузить дерево из файла" << endl;
-	cout << "7. Проверить наличие узла" << endl;
-	cout << "8. Завершить работу программы" << endl;
-}
-
-void correct_input(int &choose) {
-	bool good = true;
-	do {
-		cin >> choose;
-		if (!(good = cin.good())) {
-			cout << "Неправильный ввод данных. Попробуйте еще раз" << endl;
-		}
-		cin.clear();
-		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-	} while (!good);
+auto menu(Tree & tree) -> void {
+    while (1) {
+        change_color(CYAN);
+        cout << "Выберите одну из операций: " << endl;
+        cout << "1. Вывести дерево на экран" << endl;
+        cout << "2. Вывести список узлов дерева" << endl;
+        cout << "3. Добавить узел в дерево" << endl;
+        cout << "4. Удалить узел из дерева" << endl;
+        cout << "5. Сохранить дерево в файл" << endl;
+        cout << "6. Загрузить дерево из файла" << endl;
+        cout << "7. Проверить наличие узла" << endl;
+        cout << "8. Завершить работу программы" << endl;
+        change_color(GREEN);
+        int choise = 0;
+        cin >> choise;
+        if (tree.exists()&&(choise != 8))
+            cout << "Дерево пустое!" << endl;
+        else
+            switch (choise) {
+            case 1:
+                tree.print_tree();
+                break;
+            case 2: {
+                change_color(GREEN);
+                cout << "Ввести списков узлов дерева:" << endl;
+                cout << "а. Прямой обход"<< endl;
+                cout << "b. Поперечный обход" << endl;
+                cout << "c. Обратный обход" << endl;
+                char value;
+                cin >> value;
+                if (value == 'a')
+                    tree.print(traversal_order::pre);
+                else if (value == 'b')
+                    tree.print(traversal_order::in);
+                else if (value == 'c')
+                    tree.print(traversal_order::post);
+                else {
+                    change_color(RED);
+                    cout << "Введено некорректное значение!";
+                }
+                cout << endl;
+            }
+            break;
+            case 3: {
+                change_color(GREEN);
+                cout << "Введите значение добавляемого элемента: ";
+                int value;
+                cin >> value;
+                bool flag = tree.add_element(value);
+                if (flag) {
+                    cout << "Элемент успешно добавлен в дерево!" << endl;
+                }
+                if (!flag) {
+                    change_color(RED);
+                    cout << "Элемент со значением " << value << " уже есть в дереве!" << endl;
+                }
+            }
+            break;
+            case 4: {
+                change_color(GREEN);
+                cout << "Введите значение удаляемого элемента: ";
+                int value;
+                cin >> value;
+                bool flag = tree.remove(value);
+                if (flag) {
+                    cout << "Элемент успешно удален из дерева!" << endl;
+                }
+                if (!flag) {
+                    change_color(RED);
+                    cout << "Элемент со значением " << value << " не найден в дереве!" << endl;
+                }
+            }
+            break;
+            case 8: {
+                change_color(RED);
+                cout << "Вы уверены, что хотите выйти?(yes|no)" << endl;
+                change_color(GREEN);
+                string prog_exit;
+                cin >> prog_exit;
+                if ((prog_exit == "yes") || (prog_exit == "YES") ||
+                        (prog_exit == "Yes") || (prog_exit == "y")) {
+                    cout << "До свидания !" << endl;
+                    return;
+                }
+            }
+            break;
+            }
+    }
 }
