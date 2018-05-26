@@ -3,7 +3,7 @@ sudo: false
 
 matrix:
   include:
-    - os: linux
+    - os: linux 
       compiler: gcc
       addons: &gcc7
         apt:
