@@ -184,5 +184,5 @@ auto menu(Tree<T> & tree) -> void {
           }
         } break;
       }
-  }
+  } 
 }
