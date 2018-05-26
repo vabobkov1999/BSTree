@@ -108,7 +108,7 @@ TEST_CASE("delete_element_true")
 TEST_CASE("search_elem")
 {
   Tree<int> tree = {3, 2, 4, 1, 5};
-  
+   
   REQUIRE(tree.exists(6) == false);
   REQUIRE(tree.exists(4) == true);
 }
